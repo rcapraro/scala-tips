@@ -82,7 +82,7 @@ object SelfTypes extends App {
   trait ScalaApplication {
     self: ScalaDependantComponent with ScalaComponent => }
 
-  // Example - we app with front end and backend
+  // Example - web app with front end and backend
 
   // layer 1 - small components
   trait PictureRegistry extends ScalaComponent
