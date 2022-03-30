@@ -69,33 +69,37 @@ object SelfTypes extends App {
   class DependentComponent(val component: Component) // we want the right component to be injected at runtime
 
   // cake pattern
-  trait ScalaComponent {
-    // API
-    def action(x: Int): String
+  type UserInfo= String
+
+  trait UserRegistry {
+    def get(userId: String): UserInfo
   }
 
-  trait ScalaDependantComponent {
-    self: ScalaComponent =>
-    def dependantAction(x: Int): String = action(x) + "this rocks!"
+  trait UserRegistryComponent {
+    val userRegistry: UserRegistry
+
+    class MongoUserRegistry extends UserRegistry {
+      override def get(userId: String): UserInfo = "userid-logged"
+    }
   }
 
-  trait ScalaApplication {
-    self: ScalaDependantComponent with ScalaComponent => }
+  trait AuthenticationServiceComponent {
+    self: UserRegistryComponent =>
 
-  // Example - web app with front end and backend
+    val authenticationService: AuthenticationService
 
-  // layer 1 - small components
-  trait PictureRegistry extends ScalaComponent
+    class AuthenticationService {
+      def authenticate(userId: String): UserInfo = userRegistry.get(userId)
+    }
+  }
 
-  trait StatsRegistry extends ScalaComponent
+  object Application extends AuthenticationServiceComponent with UserRegistryComponent {
+    override val userRegistry: UserRegistry = new MongoUserRegistry
+    override val authenticationService: AuthenticationService = new AuthenticationService
+  }
 
-  // layer 2 - compose components
-  trait ProfileService extends ScalaDependantComponent with PictureRegistry
+  println(Application.authenticationService.authenticate("richard"))
 
-  trait AnalyticsService extends ScalaDependantComponent with StatsRegistry
-
-  // layer 3 - app
-  trait AnalyticsApps extends ScalaApplication with AnalyticsService
 
   // difference with classic DI: not inject at runtime but checked at compile time !
 
