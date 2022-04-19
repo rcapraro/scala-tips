@@ -1,8 +1,9 @@
 ThisBuild / version := "0.1.0-SNAPSHOT"
 
-ThisBuild / scalaVersion := "3.1.1"
+ThisBuild / scalaVersion := "2.13.8"
 
 lazy val root = (project in file("."))
   .settings(
-    name := "scala-tips"
+    name := "scala-tips",
+    libraryDependencies += "org.typelevel" %% "cats-core" % "2.7.0"
   )
