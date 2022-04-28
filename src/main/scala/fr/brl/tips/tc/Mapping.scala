@@ -22,11 +22,11 @@ object Mapping extends App {
   // better !
   case class Mapper[I<: Input](mapTo: I => Output[I])
   object Mapper {
-    implicit val ADoer: Mapper[A] = Mapper(x => OutA(x.id.toString))
-    implicit val BDoer: Mapper[B] = Mapper(x => OutB(x.id.toInt))
-    implicit val InputDoer: Mapper[Input] = Mapper {
-      case a: A => ADoer.mapTo(a)
-      case b: B => BDoer.mapTo(b)
+    implicit val AMapper: Mapper[A] = Mapper(x => OutA(x.id.toString))
+    implicit val BMapper: Mapper[B] = Mapper(x => OutB(x.id.toInt))
+    implicit val InputMapper: Mapper[Input] = Mapper {
+      case a: A => AMapper.mapTo(a)
+      case b: B => BMapper.mapTo(b)
     }
   }
 
