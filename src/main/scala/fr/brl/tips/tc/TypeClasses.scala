@@ -1,4 +1,4 @@
-package fr.brl.tips
+package fr.brl.tips.tc
 
 object TypeClasses extends App {
 
@@ -46,12 +46,13 @@ object TypeClasses extends App {
   }
 
   val bob = Person("Bob", 35)
-  import JSONSyntax._  // use the two implicits JSONSerializable and JSONSerializer[Person]
+
+  import JSONSyntax._ // use the two implicits JSONSerializable and JSONSerializer[Person]
 
   println(bob.toJSON)
 
   // With context bounds (:)
-  def convertListToJSON2[T:JSONSerializer](list: List[T]): String = {
+  def convertListToJSON2[T: JSONSerializer](list: List[T]): String = {
     list.map(v => v.toJSON).mkString("[", ",", "]")
   }
 
@@ -59,6 +60,7 @@ object TypeClasses extends App {
 
   // example cats TC
   // part 1 - type class import
+
   import cats.Eq
 
   // part 2 - import TC instances for the types you need
@@ -67,22 +69,27 @@ object TypeClasses extends App {
   // part 3 - use the TC API
   val intEquality = Eq[Int]
   val typeSafeEquality = intEquality.eqv(2, 3) // replace 3 with "toto", it won't compile
-  val unsafeEquality = 2 == "toto"
+  val unsafeEquality = 2 == "toto" // compiles in scala 2 bu not scala 3...
 
   // part 4 - use extension methods
+
   import cats.syntax.eq._
+
   val anotherTypeSafeEq = 2 === 3 //false
   println(anotherTypeSafeEq)
   val neqComparison = 2 =!= 3 //true
   println(neqComparison)
 
   // part 5 - extending the TC operations to composite types, e.g. List
+
   import cats.instances.list._
+
   val aListComparison = List(2) === List(3) // false
   println(aListComparison)
 
   // part 6 - create a TC instance for a custom type
   case class ToyCar(model: String, price: Double)
+
   implicit val carEq: Eq[ToyCar] = Eq.instance[ToyCar] { (car1, car2) =>
     car1.price == car2.price
   }
