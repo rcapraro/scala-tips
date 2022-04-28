@@ -21,6 +21,7 @@ object Mapping extends App {
 
   // better !
   case class Mapper[I<: Input](mapTo: I => Output[I])
+
   object Mapper {
     implicit val AMapper: Mapper[A] = Mapper(x => OutA(x.id.toString))
     implicit val BMapper: Mapper[B] = Mapper(x => OutB(x.id.toInt))
@@ -30,7 +31,7 @@ object Mapping extends App {
     }
   }
 
-  def betterMap[I <: Input](input: I)(implicit doer: Mapper[I]): Output[I] = doer.mapTo(input)
+  def betterMap[I <: Input](input: I)(implicit mapper: Mapper[I]): Output[I] = mapper.mapTo(input)
 
   println(map(A(1)))
 
