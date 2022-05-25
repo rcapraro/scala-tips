@@ -69,7 +69,7 @@ object TypeClasses extends App {
   // part 3 - use the TC API
   val intEquality = Eq[Int]
   val typeSafeEquality = intEquality.eqv(2, 3) // replace 3 with "toto", it won't compile
-  val unsafeEquality = 2 == "toto" // compiles in scala 2 bu not scala 3...
+  val unsafeEquality = 2 == "toto" // compiles in scala 2 (but always yield false) but not scala 3...
 
   // part 4 - use extension methods
 
